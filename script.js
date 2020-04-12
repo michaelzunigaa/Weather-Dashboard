@@ -1,5 +1,4 @@
-const dailyForecast = $("#city-forecast");
-const fiveDayFor = $("#five-day");
+let date = new Date();
 
 
 // 5 day forecastUrl
@@ -30,30 +29,78 @@ $("#city-search").click(function (event) {
         url: queryUrl,
         method: "GET"
     }).then(function (res) {
-
-
         $("#search-bar").val("");
 
 
         let userCity = res.city.name;
-        let weatherCon = res.list[1].weather[0];
-        let cityTemp = res.list[0].main.temp;
+        let weatherCon = res.list[1].weather[0].main;
+        let weatherConIcon = res.list[1].weather[0].icon;
+        let cityTemp = Math.floor(res.list[0].main.temp);
+
         let windSpeed = res.list[0].main.temp;
         let humidity = res.list[0].main.humidity;
+        // weather icon API response
+        // let weatherIcon = res.list.weather.icon + ".png";
 
-        console.log(userCity,",", "Weather Condition:", weatherCon, "City Temp:", cityTemp, "Wind Speed:",
-            windSpeed, "Humidity:", humidity);
+        // console.log(userCity, ",", "Weather Condition:", weatherCon, weatherConIcon, "Temp:", cityTemp, "Wind Speed:",
+        //     windSpeed, "Humidity:", humidity);
 
-
-
+        currentCondition(res);
+        // currentForecast(res);
+        searchList();
 
     });
 
-
-
-
-
 });
+
+function currentCondition(res) {
+    // let userCity = res.city.name;
+    // let weatherCon = res.list[1].weather[0].main;
+    // let weatherConIcon = res.list[1].weather[0].icon;
+    // let cityTemp = res.list[0].main.temp;
+    // let windSpeed = res.list[0].main.temp;
+    // let humidity = res.list[0].main.humidity;
+
+
+    // $("#currentCity").empty();
+
+    const card = $("<div>").addClass("card");
+    const cardBody = $("<div>").addClass("card-body");
+
+    const userCity = $("<h4>").addClass("card-title").text(res.city.name);
+    console.log(res.city.name);
+
+    // const cityDate = $("<h4>").addClass("card-title").text(date.toLocaleDateString('en-US'));
+
+    const temp = $("<p>").text("Temperature: " + res.list[0].main.temp + " °F");
+
+    const condition = $("<p>").text(res.list[1].weather[0].main);
+
+    const humidity = $("<p>").text("Humidity: " + res.list[0].main.humidity + "%");
+
+    const wind = $("<p>").text("Wind Speed: " + res.list[0].main.temp + " MPH");
+
+    const image = $("<img>").attr("src", "https://openweathermap.org/img/w/" + res.list[1].weather[0].icon + ".png");
+
+    userCity.append(image);
+    cardBody.append(userCity, condition, temp, humidity, wind);
+    card.append(cardBody);
+    $("#currentCity").append(card);
+
+
+
+}
+
+
+// function currentForecast(res) {
+
+// }
+
+function searchList() {
+    let searchItem = $("<li>").addClass("list-group-item").text(city);
+    $(".list").append(searchItem);
+
+}
 
 // getting the ajax call from our api site openweather
 
@@ -91,22 +138,6 @@ $("#city-search").click(function (event) {
 // weatherCon.append(windSpeed);
 // weatherCon.append(weatherHumidity);
 
-// }).then(function (response) {
-//     console.log(response);
-//     var newDiv = $("<div>")
-//     var newH3 = $("<h3>");
-//     var imdbInfoP = $("<p>");
-//     var newIMG = $("<img>");
-//     newH3.text(response.Title)
-//     imdbInfoP.html("IMDB rating: " + response.imdbRating + " // votes: " + response.imdbVotes + "<br>" + response.Year + "<br>" + response.Rated + "<br>" + response.Plot)
-//     newIMG.attr("class", "poster");
-//     newIMG.attr("src", response.Poster);
-//     newDiv.append(newH3);
-//     newDiv.append(imdbInfoP);
-//     newDiv.append(newIMG);
-//     newDiv.addClass("content-box animated slideInRight")
-//     imdbEL.append(newDiv);
-// });
 
 //call for the city UV index
 //       $.ajax({

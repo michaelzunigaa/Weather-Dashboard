@@ -113,11 +113,11 @@ function fiveDayForecast(res) {
 
                 let tempF = Math.floor(temp);
 
-                const card = $("<div>").addClass("card col-md-2 ml-4 bg-primary text-black");
-                const cardBody = $("<div>").addClass("card-body p-3 forecastBody")
-                const cityDate = $("<h4>").addClass("card-title").text(date.toLocaleDateString('en-US'));
-                const temperature = $("<p>").addClass("card-text forecastTemp").text("Temperature: " + tempF + " °F");
-                const humidity = $("<p>").addClass("card-text forecastHumidity").text("Humidity: " + results[i].main.humidity + "%");
+                const card = $("<div>")("card col-md-2 ml-4 bg-primary text-black");
+                const cardBody = $("<div>").addClass("card-body p-3 forecastBody");
+                const cityDate = $("<h4>").text(date.toLocaleDateString('en-US'));
+                const temperature = $("<p>").text("Temperature: " + tempF + " °F");
+                const humidity = $("<p>").text("Humidity: " + results[i].main.humidity + "%");
 
                 const image = $("<img>").attr("src", "https://openweathermap.org/img/w/" + results[i].weather[0].icon + ".png")
 

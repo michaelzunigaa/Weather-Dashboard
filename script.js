@@ -46,7 +46,7 @@ $("#city-search").click(function (event) {
         //     windSpeed, "Humidity:", humidity);
 
         currentCondition(res);
-        // currentForecast(res);
+        fiveDayForecast(res);
         searchList();
 
     });
@@ -62,15 +62,15 @@ function currentCondition(res) {
     // let humidity = res.list[0].main.humidity;
 
 
-    // $("#currentCity").empty();
+    $("#currentCity").empty();
 
     const card = $("<div>").addClass("card");
     const cardBody = $("<div>").addClass("card-body");
 
     const userCity = $("<h4>").addClass("card-title").text(res.city.name);
-    console.log(res.city.name);
+    console.log(userCity);
 
-    // const cityDate = $("<h4>").addClass("card-title").text(date.toLocaleDateString('en-US'));
+    const cityDate = $("<h4>").addClass("card-title").text(date.toLocaleDateString('en-US'));
 
     const temp = $("<p>").text("Temperature: " + res.list[0].main.temp + " °F");
 
@@ -82,7 +82,7 @@ function currentCondition(res) {
 
     const image = $("<img>").attr("src", "https://openweathermap.org/img/w/" + res.list[1].weather[0].icon + ".png");
 
-    userCity.append(image);
+    userCity.append(cityDate, image);
     cardBody.append(userCity, condition, temp, humidity, wind);
     card.append(cardBody);
     $("#currentCity").append(card);
@@ -92,67 +92,56 @@ function currentCondition(res) {
 }
 
 
-// function currentForecast(res) {
+function fiveDayForecast(res) {
+    const fiveDayUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&cnt=5" + "&units=imperial&appid=71f7dc2d0e2f836f99f5a30cce61bd3c";
 
-// }
+    $.ajax({
+        url: fiveDayUrl,
+        method: "GET"
+    }).then(function (res) {
+        const results = res.list;
+
+        for (let i = 0; i < results.length; i++) {
+            let days = Number(results[i].dt_txt.split('-')[2].split(' ')[0]);
+            let hour = results[i].dt_txt.split('-')[2].split(' ')[1];
+            console.log(days);
+            console.log(hour);
+
+            if (results[i].dt_txt.indexOf("12:00:00") !== -1) {
+
+                // get the temperature and convert to fahrenheit 
+
+                let tempF = Math.floor(temp);
+
+                const card = $("<div>").addClass("card col-md-2 ml-4 bg-primary text-black");
+                const cardBody = $("<div>").addClass("card-body p-3 forecastBody")
+                const cityDate = $("<h4>").addClass("card-title").text(date.toLocaleDateString('en-US'));
+                const temperature = $("<p>").addClass("card-text forecastTemp").text("Temperature: " + tempF + " °F");
+                const humidity = $("<p>").addClass("card-text forecastHumidity").text("Humidity: " + results[i].main.humidity + "%");
+
+                const image = $("<img>").attr("src", "https://openweathermap.org/img/w/" + results[i].weather[0].icon + ".png")
+
+                cardBody.append(cityDate, image, temperature, humidity);
+                card.append(cardBody);
+                $("#forecast").append(card);
+
+            }
+
+        }
+
+
+
+
+        console.log(res);
+    });
+}
 
 function searchList() {
     let searchItem = $("<li>").addClass("list-group-item").text(city);
     $(".list").append(searchItem);
 
+
+
+
+
 }
-
-// getting the ajax call from our api site openweather
-
-
-
-// var iconcode = response.weather[1].icon;
-// var iconurl = "http://openweathermap.org/img/w/" + iconcode + ".png";
-// $('#wicon').attr('src', iconurl);
-
-
-
-
-
-
-// //getting all the information we need to give back to the user
-
-// //   var hours = new Date().getHours();
-
-
-
-
-
-
-// // console.log(queryUrl);
-// // hourly forecast url
-// // console.log(hourlyUrl);
-
-// //city  name
-// var cityName = $("<h1>").text(res.city.name);
-
-// //appending the forecast to the body
-// dailyForecast.append(weatherCon);
-// weatherCon.append(cityName);
-// weatherCon.append(weatherTemp);
-// weatherCon.append(windSpeed);
-// weatherCon.append(weatherHumidity);
-
-
-//call for the city UV index
-//       $.ajax({
-//           url:"http://api.openweathermap.org/data/2.5/uvi/forecast?appid=71f7dc2d0e2f836f99f5a30cce61bd3c&lat=47.6062&lon=-122.3321",
-//           method:"GET"
-//         }).then(function(uvdata){
-//             //city  UVindex
-//             var uvIndex= $("<p>").text("UV Index: "+uvdata[0].value);
-//             weatherCon.append(uvIndex);
-
-
-//             console.log(uvdata);
-//             console.log(uvIndex);
-
-//         });
-
-//     });
-// });
